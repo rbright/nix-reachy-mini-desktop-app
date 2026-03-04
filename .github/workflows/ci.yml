@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Install just
+        uses: taiki-e/install-action@just
+
+      - name: Format check (Nix)
+        run: just fmt-check
+
+      - name: Lint
+        run: just lint
+
+      - name: Pre-commit hooks
+        run: just precommit-run
+
+      - name: Flake checks
+        run: nix flake check --all-systems path:.
+
+      - name: Show flake outputs
+        run: nix flake show path:.
+
+      - name: Build package
+        run: just build
+
+      - name: Build dev shell derivation
+        run: nix build 'path:.#devShells.x86_64-linux.default'
