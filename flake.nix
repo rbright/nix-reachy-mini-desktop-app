@@ -50,9 +50,12 @@
           packages = [
             pkgs.bash
             pkgs.deadnix
+            pkgs.git
+            pkgs.jq
             pkgs.just
             pkgs.nix
             pkgs.nixfmt
+            pkgs.perl
             pkgs.prek
             pkgs.ripgrep
             pkgs.shellcheck

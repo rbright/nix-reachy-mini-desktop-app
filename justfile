@@ -44,6 +44,14 @@ build:
 run *args='':
     nix run '{{ tooling_flake }}#reachy-mini-desktop-app' -- {{ args }}
 
+# Update version/hash pins in package.nix.
+update version="":
+    if [[ -n "{{ version }}" ]]; then \
+      ./scripts/update-package.sh --version "{{ version }}"; \
+    else \
+      ./scripts/update-package.sh; \
+    fi
+
 # Full validation gate.
 check: fmt-check lint
     nix flake check --all-systems '{{ tooling_flake }}'

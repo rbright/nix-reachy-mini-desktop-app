@@ -11,13 +11,67 @@ Nix package for [Reachy Mini Desktop App](https://github.com/pollen-robotics/rea
 - Packaging for the upstream Linux `.deb` release
 - Desktop entry for launchers like Walker/Vicinae
 - Reachy Mini udev rule shipped at `lib/udev/rules.d/99-reachy-mini.rules`
+- Scripted updater for version/source hash pin refresh
+- Scheduled GitHub Actions updater that opens auto-mergeable PRs
 - Local quality gate (`just`) and GitHub Actions CI
 
 ## Upstream source pin
 
 Current source URL:
 
-- `https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v0.9.19/Reachy.Mini.Control_0.9.19_amd64.deb`
+- `https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v0.9.20/Reachy.Mini.Control_0.9.20_amd64.deb`
+
+## Update workflow
+
+```sh
+# latest stable upstream release
+just update
+
+# explicit version
+just update 0.9.20
+```
+
+`./scripts/update-package.sh` updates both values in `package.nix`:
+
+- `version`
+- `src.hash`
+
+### Updater prerequisites
+
+- `git`
+- `jq`
+- `nix`
+- `perl`
+
+Check script usage:
+
+```sh
+./scripts/update-package.sh --help
+```
+
+## Automated GitHub updates
+
+Workflow: `.github/workflows/update-reachy-mini-desktop-app.yml`
+
+- Runs every 6 hours and on manual dispatch.
+- Detects the latest stable upstream tag from `pollen-robotics/reachy-mini-desktop-app`.
+- If newer than `package.nix`, runs `scripts/update-package.sh` and opens/updates a PR.
+- Enables auto-merge (`squash`) for that PR.
+
+### One-time repository setup
+
+1. Add repo secret `REACHY_MINI_DESKTOP_APP_UPDATER_TOKEN` (fine-grained PAT scoped to this repo):
+   - **Contents**: Read and write
+   - **Pull requests**: Read and write
+2. In repository settings → **Actions → General**:
+   - Set workflow permissions to **Read and write permissions**.
+   - Enable **Allow GitHub Actions to create and approve pull requests**.
+3. Ensure branch protection/required checks allow auto-merge after CI passes.
+
+Manual trigger:
+
+- Actions → **Update Reachy Mini Desktop App package** → **Run workflow**
+- Optional input: `version` (accepts `0.x.y` or `v0.x.y`)
 
 ## Quickstart
 
