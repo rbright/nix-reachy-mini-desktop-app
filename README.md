@@ -13,6 +13,7 @@ Nix package for [Reachy Mini Desktop App](https://github.com/pollen-robotics/rea
 - Reachy Mini udev rule shipped at `lib/udev/rules.d/99-reachy-mini.rules`
 - Scripted updater for version/source hash pin refresh
 - Scheduled GitHub Actions updater that opens auto-mergeable PRs
+- Automated GitHub release creation on `reachy-mini-desktop-app` version bumps
 - Local quality gate (`just`) and GitHub Actions CI
 
 ## Upstream source pin
@@ -72,6 +73,17 @@ Manual trigger:
 
 - Actions → **Update Reachy Mini Desktop App package** → **Run workflow**
 - Optional input: `version` (accepts `0.x.y` or `v0.x.y`)
+
+## Automated GitHub releases
+
+Workflow: `.github/workflows/release-reachy-mini-desktop-app.yml`
+
+- Runs on pushes to `main` when `package.nix` changes.
+- Compares previous and current `package.nix` `version` values.
+- Creates a GitHub release + tag named `v<version>` only when the packaged version changes.
+- Skips docs-only merges and other changes that do not modify `package.nix` version.
+
+No extra secret is required; it uses the workflow `GITHUB_TOKEN` with `contents: write`.
 
 ## Quickstart
 
