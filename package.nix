@@ -15,11 +15,11 @@
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "reachy-mini-desktop-app";
-  version = "0.9.24";
+  version = "0.9.26";
 
   src = fetchurl {
     url = "https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v${version}/Reachy.Mini.Control_${version}_amd64.deb";
-    hash = "sha256-3CtLq2vS/mHTRxL5+Rg613J0Pp+3616Q9SS1f8AzHk0=";
+    hash = "sha256-I3iDuHJP0JeW1GtwtKxqQ6NGgOdnfAzpEGaf/030PZk=";
   };
 
   nativeBuildInputs = [
@@ -50,8 +50,24 @@ stdenvNoCC.mkDerivation rec {
     dpkg-deb -x "$src" unpacked
     cp -r unpacked/usr/. "$out/"
 
+    rule_source=""
+    for candidate in \
+      "unpacked/usr/share/reachy-mini-control/99-reachy-mini.rules" \
+      "unpacked/etc/udev/rules.d/99-reachy-mini.rules"
+    do
+      if [ -f "$candidate" ]; then
+        rule_source="$candidate"
+        break
+      fi
+    done
+
+    if [ -z "$rule_source" ]; then
+      echo "Missing Reachy Mini udev rule in extracted package" >&2
+      exit 1
+    fi
+
     install -Dm644 \
-      "unpacked/etc/udev/rules.d/99-reachy-mini.rules" \
+      "$rule_source" \
       "$out/lib/udev/rules.d/99-reachy-mini.rules"
 
     # Work around Hyprland/WebKitGTK rendering issues (Wayland protocol error

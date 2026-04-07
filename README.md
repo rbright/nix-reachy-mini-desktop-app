@@ -20,7 +20,7 @@ Nix package for [Reachy Mini Desktop App](https://github.com/pollen-robotics/rea
 
 Current source URL:
 
-- `https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v0.9.20/Reachy.Mini.Control_0.9.20_amd64.deb`
+- `https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v0.9.26/Reachy.Mini.Control_0.9.26_amd64.deb`
 
 ## Update workflow
 
@@ -29,7 +29,7 @@ Current source URL:
 just update
 
 # explicit version
-just update 0.9.20
+just update 0.9.26
 ```
 
 `./scripts/update-package.sh` updates both values in `package.nix`:
