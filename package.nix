@@ -15,11 +15,11 @@
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "reachy-mini-desktop-app";
-  version = "0.9.28";
+  version = "0.9.29";
 
   src = fetchurl {
     url = "https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v${version}/Reachy.Mini.Control_${version}_amd64.deb";
-    hash = "sha256-5h3Ycnjy6/yG3H3u3Oksn/nI5Az7h9hBNMoupUfC8zw=";
+    hash = "sha256-j5m6WfmmVe7yC79EtZ/W5lMzYuGzj2z99m83neu/YWo=";
   };
 
   nativeBuildInputs = [
