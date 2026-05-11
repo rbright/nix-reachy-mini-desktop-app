@@ -5,6 +5,7 @@
   dpkg,
   autoPatchelfHook,
   makeWrapper,
+  gst_all_1,
   gtk3,
   libsoup_3,
   openssl,
@@ -15,11 +16,11 @@
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "reachy-mini-desktop-app";
-  version = "0.9.29";
+  version = "0.9.30";
 
   src = fetchurl {
     url = "https://github.com/pollen-robotics/reachy-mini-desktop-app/releases/download/v${version}/Reachy.Mini.Control_${version}_amd64.deb";
-    hash = "sha256-j5m6WfmmVe7yC79EtZ/W5lMzYuGzj2z99m83neu/YWo=";
+    hash = "sha256-ONg3soZ7ojIBh6u+WrBLwC5HQxzg+kqm+jvvNZzHlac=";
   };
 
   nativeBuildInputs = [
@@ -29,6 +30,7 @@ stdenvNoCC.mkDerivation rec {
   ];
 
   buildInputs = [
+    gst_all_1.gst-plugins-bad
     gtk3
     libsoup_3
     openssl
